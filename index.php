@@ -1,30 +1,59 @@
 <?php 
-//Declaração de variaveis, matrizes e manipulação de data/hr manipulação de 
-// - definindo o timezone -
-date_default_timezone_set('America/Sao_Paulo');
-$nome = "vitorfs";
-$dataNasc = date('24/02/2004');
+// comentários de linha
+# comentário de linha
+/* comentário de bloco */
+
+// declaração de variáveis e matrizes - manipulação de data/hr - manipulação de string
+
+$nome = "Vitorfs502";
+$dataNasc = date('2004/02/24');
 echo($nome.' - '. $dataNasc);
 echo('<br>');
-$hoje = date ('d/m/Y H:i:s');
+$hoje = date('d/m/Y H:i:s');
 echo($hoje. '<br>');
-echo('<br>');
+
+        // definindo timezone
+        date_default_timezone_set('America/Sao_Paulo');
+
 $data = new DateTime();
 echo('<br>');
 //print_r($data);
-
+$hoje = date('d/m/Y H:i:s');
+echo('<br>');
+$hoje = date('d-M-y H:i:s');
+echo('<br>');
+$hoje = date('D, d M Y H:i:s');
+echo('<br>');
+$hoje = date('M H:i');
+echo('<br>');
+$hoje = date('D-d H:i');
 $teste = true;
 $idade = 35;
 $valor = 458.65;
 
-$nome = $_POST['valor-txt'];
-echo('<h1>'. $nome. '<h1>');
 
-//Estrutura de controle de decisão
+// estrutura de controle de decisão
 
-//Estrutura de repetição
+// estrutura de repetição
 
-//Funções e configuração
+// funções e config
+
+// "%2C" na url é virgula.
+if(isset($_GET['enviar'])){
+    $nome = $_GET['txt-nome'];
+    $email = $_GET['txt-email'];
+    $data_nasc = $_GET['txt-data-nasc'];
+    $dataT = new DateTime($data_nasc);
+    $data_nasc = date_format($data, 'd-M-Y');
+
+    $aluno = array('nome'=>$nome,'email'=>$email, 'datan'=>$data_nasc);
+
+    foreach ($aluno as $key => $value) {
+        echo('<h3>'.$key.': '.$value.'</h3>');
+    }
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -35,8 +64,22 @@ echo('<h1>'. $nome. '<h1>');
   <title>Document</title>
 </head>
 <body>
-  <form action="#" method="post"><input type="text" name="valor-txt" placeholder="digite o valor" id="">
-    <button type="submit">enviar</button>
+  <form action="#" method="GET">
+    <label for="txt-nome">
+      Nome:
+    <input type="text" name="txt-nome" placeholder="digite seu nome..." id="" required>
+    </label><br>
+    <label for="">
+      email:
+    <input type="email" name="txt-email" placeholder="digite seu email..." id="" required>
+    </label><br>
+    <label for="">
+      data de nascimento:
+    <input type="date" name="txt-data-nasc" id="" required>
+    </label><br>
+
+
+    <button type="submit">Enviar</button>
   </form>
 </body>
 </html>
