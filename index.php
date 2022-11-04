@@ -1,10 +1,5 @@
 <?php 
-    //var's
-    //$anon = 1989;
-    //$anoa = 2022;
-    //$idade = $anoa - $anon;
-    //$idade = "dezenove";
-    //$idade = 19.5
+
     $times = array();
     $times[0] = "paumeiras";
     $times[1] = "paumeira";
