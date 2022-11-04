@@ -30,10 +30,12 @@ $hoje = date('D-d H:i');
 $teste = true;
 $idade = 35;
 $valor = 458.65;
-
+$grana = 0
 
 // estrutura de controle de decisão
-
+if(!($teste>0)){
+echo('sacar dinheiro! <br>');
+}
 // estrutura de repetição
 
 // funções e config
