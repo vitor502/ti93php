@@ -1,5 +1,5 @@
 <?php
-    include 'config.php';
+    include 'config.php, index.php';
     $dataAtual = new DateTime();
     
     print_r($dataAtual);
@@ -14,8 +14,9 @@
         echo '<br>';
     }
     echo '<br>';
+    print_r($dataNasc);
+    echo '<br>';
     $dataSistema = new DateTime();
-    $dataNasc = new DateTime('2004/02/24');
     print_r($dataNasc);
     echo '<br>';
     $intervalo = $dataNasc->diff($dataSistema);

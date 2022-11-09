@@ -49,6 +49,8 @@ echo('sacar dinheiro! <br>');
 
 // estrutura de repetição
 
+//variaveis da tvg
+
 
 ?>
 <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
@@ -62,18 +64,15 @@ echo('sacar dinheiro! <br>');
 </head>
   <body>
     <!-- Ação do formularo -->
-    <form action="opform.php" method="post" name="frm-aluno">
+    <form action="datas.php" method="post" name="frm-aluno">
       <label for="txt-nome">
         Nome:
           <input type="text" name="txt-nome" placeholder="digite seu nome..." id="" required>
           </label><br>
-      <label for="">
-        Email:
-          <input type="email" name="txt-email" placeholder="digite seu email..." id="" required>
-          </label><br>
+<!-- ----------------------------------------------------------------------------------------------------------------------------- -->
       <label for="">
         Data de Nascimento:
-          <input type="date" name="txt-data-nasc" id="" required>
+          <input type="date" name="txt-data-nasc" id="" required value="<?php echo $dataNasc; ?>"/>
           </label><br>
           <button type="submit" name="enviar">Enviar</button>
     </form>
