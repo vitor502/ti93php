@@ -1,4 +1,6 @@
 <?php 
+include 'congig.php';
+
 // comentários de linha
 # comentário de linha
 /* comentário de bloco */
@@ -30,7 +32,7 @@ $hoje = date('D-d H:i');
 $teste = true;
 $idade = 35;
 $valor = 458.65;
-$grana = 0
+$grana = 0;
 
 // estrutura de controle de decisão
 if(!($teste>0)){
