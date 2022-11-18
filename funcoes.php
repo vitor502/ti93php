@@ -1,9 +1,27 @@
 <?php 
-    function geraCoeficiente(float $taxa, int $periodo): float{
-        return pow((1+($taxa/100)),$periodo)/$periodo;
+function geraCoeficienteParcela(float $taxa, int $periodo=1): float
+{
+    return pow((1+($taxa/100)),$periodo)/ $periodo;
+}
+function atrasoIntervalo($minutos)
+{
+   return $minutos>20?'Atrasado!':'Ok'; //if ternário
+}
+function validaMatricula(DateTime $data)
+{
+    $diff = $data->diff(new DateTime());
+    $anos = $diff->format('%y');
+
+    if ($anos < 6) {
+        return 'o garoto(a) não pode ser matric.';
+    }else{
+        return 'pode matricular o rebento!';
     }
-    
-    echo 970 * geraCoeficiente(2.0, 6);
-    echo('<br>');
-    echo 600 * geraCoeficiente(1.27,12) * 12;
- ?>
+}
+
+//echo validaMatricula(new DateTime('2010-6-23'));
+
+
+
+
+?>

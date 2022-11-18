@@ -1,1 +1,17 @@
 /* Go */
+.tabelinha{
+    border: 1px solid blue;
+}
+
+.tabelinha td{
+    border: 1px solid red;
+    margin: 5px;
+}
+
+.campo{
+    padding: 7px;
+}
+
+.body{
+    background-color: darkgray;
+}
