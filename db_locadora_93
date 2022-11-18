@@ -1,0 +1,446 @@
+drop database if exists db_locadora_93;
+create database db_locadora_93;
+use db_locadora_93;
+
+create table classificacao(
+cod_classificacao int not null auto_increment,
+classificacoes char(2) not null,
+primary key(cod_classificacao));
+
+create table genero(
+cod_genero int not null auto_increment,
+tipo varchar(20) not null,
+primary key(cod_genero));
+
+create table elenco(
+cod_elenco int not null auto_increment,
+atores varchar(50) not null,
+primary key(cod_elenco));
+
+create table direcao(
+cod_direcao int not null auto_increment,
+diretores varchar(50) not null,
+primary key(cod_direcao));
+
+create table idioma(
+cod_idioma int not null auto_increment,
+idiomas varchar(20) not null,
+primary key(cod_idioma));
+
+create table legenda(
+cod_legenda int not null auto_increment,
+legendas varchar(20) not null,
+primary key(cod_legenda));
+
+create table filme(
+cod_filme int not null auto_increment,
+titulo varchar(100) not null,
+sinopse text not null,
+lancamento year not null,
+pais_origem varchar(30) not null,
+duracao int not null,
+preco decimal(4,2) not null,
+cod_classificacao int,
+primary key(cod_filme),
+foreign key(cod_classificacao) references classificacao(cod_classificacao));
+
+create table filme_genero(
+cod_fil_gen int not null auto_increment,
+cod_filme int,
+cod_genero int,
+primary key(cod_fil_gen),
+foreign key(cod_filme) references filme(cod_filme),
+foreign key(cod_genero) references genero(cod_genero));
+
+create table filme_elenco(
+cod_fil_ele int not null auto_increment,
+cod_filme int,
+cod_elenco int,
+primary key(cod_fil_ele),
+foreign key(cod_filme) references filme(cod_filme),
+foreign key(cod_elenco) references elenco(cod_elenco));
+
+create table filme_direcao(
+cod_fil_dir int not null auto_increment,
+cod_filme int,
+cod_direcao int,
+primary key(cod_fil_dir),
+foreign key(cod_filme) references filme(cod_filme),
+foreign key(cod_direcao) references direcao(cod_direcao));
+
+create table filme_idioma(
+cod_fil_idi int not null auto_increment,
+cod_filme int,
+cod_idioma int,
+primary key(cod_fil_idi),
+foreign key(cod_filme) references filme(cod_filme),
+foreign key(cod_idioma) references idioma(cod_idioma));
+
+create table filme_legenda(
+cod_fil_leg int not null auto_increment,
+cod_filme int,
+cod_legenda int,
+primary key(cod_fil_leg),
+foreign key(cod_filme) references filme(cod_filme),
+foreign key(cod_legenda) references legenda(cod_legenda));
+
+create table funcionario(
+cod_func int not null auto_increment,
+nome varchar(50),
+cpf varchar(11) not null unique,
+cargo varchar(20) not null,
+escala varchar(40) not null,
+turno varchar(20) not null,
+admissao date not null,
+demissao date,
+salario decimal(6,2) not null,
+vt decimal(5,2),
+vr decimal(5,2),
+va decimal(5,2),
+primary key(cod_func));
+
+create table cliente(
+cod_cliente int not null auto_increment,
+nome varchar(50) not null,
+cpf varchar(11) not null,
+primary key(cod_cliente));
+
+create table cartao(
+cod_cartao int not null auto_increment,
+num_cartao varchar(16) not null,
+validade varchar(5) not null,
+cvv varchar(3) not null,
+tipo varchar(15) not null,
+cod_cliente int,
+primary key(cod_cartao),
+foreign key(cod_cliente) references cliente(cod_cliente));
+
+create table endereco(
+cod_endereco int not null auto_increment,
+logradouro varchar(50) not null,
+num varchar(5) not null,
+bairro varchar(20) not null,
+cidade varchar(20) not null,
+uf char(2) not null,
+cep varchar(8) not null,
+complemento varchar(15),
+tipo varchar(15) not null,
+primary key(cod_endereco));
+
+create table email(
+cod_email int not null auto_increment,
+email varchar(60) not null,
+primary key(cod_email));
+
+create table telefone(
+cod_telefone int not null auto_increment,
+telefone varchar(11) not null,
+tipo varchar(15) not null,
+primary key(cod_telefone));
+
+create table lig_func_end(
+cod_lig_func_end int not null auto_increment,
+cod_func int,
+cod_endereco int,
+primary key(cod_lig_func_end),
+foreign key(cod_func) references funcionario(cod_func),
+foreign key(cod_endereco) references endereco(cod_endereco));
+
+create table lig_func_email(
+cod_lig_func_email int not null auto_increment,
+cod_func int,
+cod_email int,
+primary key(cod_lig_func_email),
+foreign key(cod_func) references funcionario(cod_func),
+foreign key(cod_email) references email(cod_email));
+
+create table lig_func_tel(
+cod_lig_func_tel int not null auto_increment,
+cod_func int,
+cod_telefone int,
+primary key(cod_lig_func_tel),
+foreign key(cod_func) references funcionario(cod_func),
+foreign key(cod_telefone) references telefone(cod_telefone));
+
+create table lig_cli_end(
+cod_lig_cli_end int not null auto_increment,
+cod_cliente int,
+cod_endereco int,
+primary key(cod_lig_cli_end),
+foreign key(cod_cliente) references cliente(cod_cliente),
+foreign key(cod_endereco) references endereco(cod_endereco));
+
+create table lig_cli_email(
+cod_lig_cli_email int not null auto_increment,
+cod_cliente int,
+cod_email int,
+primary key(cod_lig_cli_email),
+foreign key(cod_cliente) references cliente(cod_cliente),
+foreign key(cod_email) references email(cod_email));
+
+create table lig_cli_tel(
+cod_lig_cli_tel int not null auto_increment,
+cod_cliente int,
+cod_telefone int,
+primary key(cod_lig_cli_tel),
+foreign key(cod_cliente) references cliente(cod_cliente),
+foreign key(cod_telefone) references telefone(cod_telefone));
+
+create table locacao(
+cod_locacao int not null auto_increment,
+retirada datetime,
+devolucao datetime,
+multa decimal(4,2) not null,
+forma_pagamento varchar(20) not null,
+cod_func int not null,
+cod_cliente int not null,
+primary key(cod_locacao),
+foreign key(cod_func) references funcionario(cod_func),
+foreign key(cod_cliente) references cliente(cod_cliente));
+
+create table item_locacao(
+cod_item_locacao int not null auto_increment,
+cod_filme int not null,
+valor decimal(4,2) not null,
+cod_locacao int not null,
+primary key(cod_item_locacao),
+foreign key(cod_filme) references filme(cod_filme),
+foreign key(cod_locacao) references locacao(cod_locacao));
+
+insert into classificacao(classificacoes) values('L');
+insert into classificacao(classificacoes) values(12);
+insert into classificacao(classificacoes) values(14);
+insert into classificacao(classificacoes) values(16);
+insert into classificacao(classificacoes) values(18);
+
+insert into genero(tipo) values('Ação');
+insert into genero(tipo) values('Comédia');
+insert into genero(tipo) values('Terror');
+insert into genero(tipo) values('Ficção');
+insert into genero(tipo) values('Românce');
+insert into genero(tipo) values('Suspense');
+insert into genero(tipo) values('Drama');
+insert into genero(tipo) values('Mistério');
+
+insert into elenco(atores) values('Brad Dourif');
+insert into elenco(atores) values('Catherine Hicks');
+
+insert into elenco(atores) values('Keira Daniels');
+insert into elenco(atores) values('Annabelle Wallis');
+insert into elenco(atores) values('Patrick Wilson');
+insert into elenco(atores) values('Vera Farmiga');
+insert into elenco(atores) values('Isabelle Fuhrman');
+insert into elenco(atores) values('Jason Clarke');
+insert into elenco(atores) values('Amy Seimetz');
+
+insert into direcao(diretores) values('Tom Holland');
+insert into direcao(diretores) values('John R. Leonetti');
+insert into direcao(diretores) values('James Wan');
+insert into direcao(diretores) values('Jaume Collet-Serra');
+insert into direcao(diretores) values('Kevin Kolsch');
+insert into direcao(diretores) values('Dennis Widmye');
+
+insert into idioma(idiomas) values('Inglês');
+insert into idioma(idiomas) values('Português');
+
+insert into legenda(legendas) values('Inglês');
+insert into legenda(legendas) values('Português');
+
+insert into filme(titulo,sinopse,lancamento,pais_origem, duracao,preco,cod_classificacao) values('Brinquedo Assassino (1988) ','O serial killer Charles Lee Ray é morto em um tiroteio com a polícia, mas antes de morrer utiliza seus conhecimentos de vodu e transfere sua alma para um boneco. ',1988,'EUA',77,10.00,4);
+insert into filme(titulo,sinopse,lancamento,pais_origem, duracao,preco,cod_classificacao) values('Annabelle','John Form acha que encontrou o presente ideal para sua esposa grávida, uma boneca vintage. No entanto, a alegria do casal não dura muito. Uma noite terrível, membros de uma seita satânica invadem a casa do casal em um ataque violento.',2014,'EUA',99,6.5,3);
+insert into filme(titulo,sinopse,lancamento,pais_origem, duracao,preco,cod_classificacao) values('Invocação do Mal', 'Os investigadores paranormais Ed e Lorraine Warren trabalham para ajudar a família aterrorizada por uma entidade demoníaca em sua fazenda.' ,2013,'EUA',112,5,3);
+insert into filme(titulo,sinopse,lancamento,pais_origem, duracao,preco,cod_classificacao) values('A Órfã','Uma série de eventos alarmantes faz com que uma mulher acredite que algum mal esteja por trás do rosto angelical da filha de nove anos, recentemente adotada. ',2009,'EUA',123,3,5);
+insert into filme(titulo,sinopse,lancamento,pais_origem, duracao,preco,cod_classificacao) values('Cemitério Maldito','Uma família se muda para uma nova casa, localizada nos arredores de um antigo cemitério amaldiçoado, usado para enterrar animais de estimação, mas que já foi usado para sepultamento de indígenas. Algumas coisas estranhas começam a acontecer, transformando a vida cotidiana dos moradores em um pesadelo. ',2019,'EUA',85,5,4);
+
+insert into filme_genero(cod_filme,cod_genero) values(1,3);
+insert into filme_genero(cod_filme,cod_genero) values(1,8);
+insert into filme_genero(cod_filme,cod_genero) values(2,3);
+insert into filme_genero(cod_filme,cod_genero) values(3,3);
+insert into filme_genero(cod_filme,cod_genero) values(3,6);
+insert into filme_genero(cod_filme,cod_genero) values(3,7);
+insert into filme_genero(cod_filme,cod_genero) values(4,3);
+insert into filme_genero(cod_filme,cod_genero) values(5,3);
+insert into filme_genero(cod_filme,cod_genero) values(5,6);
+
+insert into filme_elenco(cod_filme,cod_elenco) values(1,1);
+insert into filme_elenco(cod_filme,cod_elenco) values(1,2);
+insert into filme_elenco(cod_filme,cod_elenco) values(2,3);
+insert into filme_elenco(cod_filme,cod_elenco) values(2,4);
+insert into filme_elenco(cod_filme,cod_elenco) values(3,5);
+insert into filme_elenco(cod_filme,cod_elenco) values(3,6);
+insert into filme_elenco(cod_filme,cod_elenco) values(4,7);
+insert into filme_elenco(cod_filme,cod_elenco) values(4,6);
+insert into filme_elenco(cod_filme,cod_elenco) values(5,8);
+insert into filme_elenco(cod_filme,cod_elenco) values(5,9);
+
+insert into filme_idioma(cod_filme,cod_idioma) values(1,1);
+insert into filme_idioma(cod_filme,cod_idioma) values(1,2);
+insert into filme_idioma(cod_filme,cod_idioma) values(2,1);
+insert into filme_idioma(cod_filme,cod_idioma) values(2,2);
+insert into filme_idioma(cod_filme,cod_idioma) values(3,1);
+insert into filme_idioma(cod_filme,cod_idioma) values(3,2);
+insert into filme_idioma(cod_filme,cod_idioma) values(4,1);
+insert into filme_idioma(cod_filme,cod_idioma) values(4,2);
+insert into filme_idioma(cod_filme,cod_idioma) values(5,1);
+insert into filme_idioma(cod_filme,cod_idioma) values(5,2);
+
+insert into filme_legenda(cod_filme,cod_legenda) values(1,1);
+insert into filme_legenda(cod_filme,cod_legenda) values(1,2);
+insert into filme_legenda(cod_filme,cod_legenda) values(2,1);
+insert into filme_legenda(cod_filme,cod_legenda) values(2,2);
+insert into filme_legenda(cod_filme,cod_legenda) values(3,1);
+insert into filme_legenda(cod_filme,cod_legenda) values(3,2);
+insert into filme_legenda(cod_filme,cod_legenda) values(4,1);
+insert into filme_legenda(cod_filme,cod_legenda) values(4,2);
+insert into filme_legenda(cod_filme,cod_legenda) values(5,1);
+insert into filme_legenda(cod_filme,cod_legenda) values(5,2);
+
+insert into funcionario(nome,cpf,cargo,escala,turno,admissao,salario,vr,va,vt) values('Joana Conceição','69839053850','Atendente','Terça, Quinta e Sabado','Manhã','2019-04-26',1100,100,150,100);
+insert into funcionario(nome,cpf,cargo,escala,turno,admissao,salario,vr,va,vt) values('Cauã Peixoto','86611943854','Atendente','Segunda, Quarta e Sexta','Noturno','2020-01-03',1600,150,200,120);
+insert into funcionario(nome,cpf,cargo,escala,turno,admissao,salario,vr,va,vt) values('Daniel Silva','69573008890','Atendente','Terça, Quinta e Sabado','Noturno','2020-01-03',1600,150,200,120);
+insert into funcionario(nome,cpf,cargo,escala,turno,admissao,demissao,salario,vr,va,vt) values('Alexandre Martins','24139378891','Atendente','Segunda, Quarta e Sexta','Noturno','2020-01-03','2021-03-04',1600,150,200,120);
+insert into funcionario(nome,cpf,cargo,escala,turno,admissao,salario,vr,va,vt) values('Marcela Pereira','64652952880','Gerente','Segunda, Quarta e Sexta','Manhã','2019-04-25',2000,100,150,100);
+
+insert into endereco(logradouro,num,bairro,cidade,uf,cep,tipo) values('Rua Pedro Bellegarde',186,'Tatuapé','São Paulo','SP','03317080','Residencial');
+insert into endereco(logradouro,num,bairro,cidade,uf,cep,tipo) values('Rua Dr. Miguel Vieira Ferreira',197,'Tatuapé','São Paulo','SP','03071080','Residencial');
+insert into endereco(logradouro,num,bairro,cidade,uf,cep,tipo) values('Gentil Braga',359,'Vila Buenos Aires','São Paulo','SP','03737020','Residencial');
+insert into endereco(logradouro,num,bairro,cidade,uf,cep,tipo) values('Rua Equici',314,'Vila Esperança','São Paulo', 'SP','03647040','Residencial');
+insert into endereco(logradouro,num,bairro,cidade,uf,cep,tipo) values('Rua Dezenove de Maio',211,'Vila Esperança','São Paulo','SP','03648080','Residencial');
+
+insert into cliente(nome,cpf) values('Isabelle Rocha','62931437875');
+insert into cliente(nome,cpf) values('Raquel Santos','75531660812');
+insert into cliente(nome,cpf) values('Alexandre Martins','24139378891');
+insert into cliente(nome,cpf) values('Joana Conceição','69839053850');
+
+insert into cartao(num_cartao,validade,cvv,tipo) values('5157592129040339','24-06',278,'Crédito');
+insert into cartao(num_cartao,validade,cvv,tipo) values('4768465173476796','24-08',981,'Débito');
+insert into cartao(num_cartao,validade,cvv,tipo) values('4532833924503082','23-12',382,'Crédito');
+insert into cartao(num_cartao,validade,cvv,tipo) values('5172847808814722','27-04',812,'Débito');
+insert into cartao(num_cartao,validade,cvv,tipo) values('6062824998745207','24-03',552,'Crédito');
+insert into cartao(num_cartao,validade,cvv,tipo) values('5419918609011918','26-09',407,'Débito');
+insert into cartao(num_cartao,validade,cvv,tipo) values('5242793861688841','24-03',106,'Crédito');
+
+insert into email(email) values('marcela_pereira@gmail.com');
+insert into email(email) values('cauapeixoto@gmail.com.br');
+insert into email(email) values('daniel-silva87@gmail.com.br');
+insert into email(email) values('joanaconceicao@gmail.com.br');
+insert into email(email) values('isabellerocha@gmail.com.br');
+insert into email(email) values('raquel.santos12@gmail.com.br');
+insert into email(email) values('alexandremartins205@gmail.com.br');
+
+insert into telefone(telefone,tipo) values('11981599816','Celular');
+insert into telefone(telefone,tipo) values('11981661404','Celular');
+insert into telefone(telefone,tipo) values('11986619557','Celular');
+insert into telefone(telefone,tipo) values('1136997107','Fixo');
+insert into telefone(telefone,tipo) values('1129546478','Fixo');
+insert into telefone(telefone,tipo) values('1137132198','Fixo');
+insert into telefone(telefone,tipo) values('1136315741','Fixo');
+
+insert into lig_func_end(cod_func,cod_endereco) values(1,3);
+insert into lig_func_end(cod_func,cod_endereco) values(2,5);
+insert into lig_func_end(cod_func,cod_endereco) values(3,1);
+insert into lig_func_end(cod_func,cod_endereco) values(4,4);
+insert into lig_func_end(cod_func,cod_endereco) values(5,2);
+
+insert into lig_func_email(cod_func,cod_email) values(1,4);
+insert into lig_func_email(cod_func,cod_email) values(2,2);
+insert into lig_func_email(cod_func,cod_email) values(3,3);
+insert into lig_func_email(cod_func,cod_email) values(4,7);
+insert into lig_func_email(cod_func,cod_email) values(5,1);
+
+insert into lig_func_tel(cod_func,cod_telefone) values(1,3);
+insert into lig_func_tel(cod_func,cod_telefone) values(2,7);
+insert into lig_func_tel(cod_func,cod_telefone) values(3,6);
+insert into lig_func_tel(cod_func,cod_telefone) values(4,1);
+insert into lig_func_tel(cod_func,cod_telefone) values(5,2);
+
+insert into lig_cli_end(cod_cliente,cod_endereco) values(1,3);
+insert into lig_cli_end(cod_cliente,cod_endereco) values(2,5);
+insert into lig_cli_end(cod_cliente,cod_endereco) values(3,4);
+insert into lig_cli_end(cod_cliente,cod_endereco) values(4,2);
+
+insert into lig_cli_email(cod_cliente,cod_email) values(1,5);
+insert into lig_cli_email(cod_cliente,cod_email) values(2,6);
+insert into lig_cli_email(cod_cliente,cod_email) values(3,7);
+insert into lig_cli_email(cod_cliente,cod_email) values(4,4);
+
+insert into lig_cli_tel(cod_cliente,cod_telefone) values(1,5);
+insert into lig_cli_tel(cod_cliente,cod_telefone) values(2,7);
+insert into lig_cli_tel(cod_cliente,cod_telefone) values(3,1);
+insert into lig_cli_tel(cod_cliente,cod_telefone) values(4,3);
+
+insert into locacao(retirada,devolucao,multa,forma_pagamento,cod_func,cod_cliente) values('2021-04-15','2021-04-16',00.00,'Dinheiro',2,1);
+insert into locacao(retirada,devolucao,multa,forma_pagamento,cod_func,cod_cliente) values('2021-07-28','2021-07-29',00.00,'Crédito',5,4);
+insert into locacao(retirada,devolucao,multa,forma_pagamento,cod_func,cod_cliente) values('2021-12-18','2021-12-20',00.00,'Débito',1,3);
+insert into locacao(retirada,devolucao,multa,forma_pagamento,cod_func,cod_cliente) values('2022-01-28','2022-02-7',20.00,'Dinheiro',3,2);
+
+insert into item_locacao(cod_filme,valor,cod_locacao) values(1,10.00,4);
+insert into item_locacao(cod_filme,valor,cod_locacao) values(5,5.00,2);
+insert into item_locacao(cod_filme,valor,cod_locacao) values(3,5.00,1);
+insert into item_locacao(cod_filme,valor,cod_locacao) values(4,3.00,3);
+insert into item_locacao(cod_filme,valor,cod_locacao) values(2,6.50,4);
+
+alter table cliente add deleted datetime null;
+update cliente set deleted = now() where cod_cliente = 6;
+select * from cliente where deleted is null order by nome,cpf asc;
+select * from cliente where deleted is not null order by nome,cpf asc;
+update cliente set nome = '',cpf = '' where cod_cliente = 6;
+update cliente set deleted = null where cod_cliente = 6;
+
+select * from classificacao;
+select * from genero;
+select * from elenco;
+select * from filme;
+select * from filme_genero;
+select * from filme_elenco;
+
+select * from funcionario;
+select * from cliente;
+select * from cartao;
+select * from endereco;
+select * from email;
+select * from telefone;
+
+select * from lig_func_end;
+select * from lig_func_email;
+select * from lig_func_tel;
+select * from lig_cli_end;
+select * from lig_cli_email;
+select * from lig_cli_tel;
+
+select * from locacao;
+select * from item_locacao;
+
+
+desc classificacao;
+desc genero;
+desc elenco;
+desc direcao;
+desc idioma;
+desc legenda;
+desc filme;
+desc filme_genero;
+desc filme_elenco;
+desc filme_direcao;
+desc filme_idioma;
+desc filme_legenda;
+
+desc funcionario;
+
+desc cliente;
+desc cartao;
+
+desc endereco;
+desc email;
+desc telefone;
+
+desc lig_func_end;
+desc lig_func_email;
+desc lig_func_tel;
+
+desc lig_cli_end;
+desc lig_cli_email;
+desc lig_cli_tel;
+
+desc locacao;
+desc item_locacao;
