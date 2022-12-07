@@ -1,80 +1,28 @@
 <?php 
 include 'conecta.php';
-// criando consulta SQL 
-    $consultaSql = "SELECT * FROM cliente where deleted is null order by nome asc, cod_cliente asc";
-    $consultaSqlArq = "SELECT * FROM cliente where deleted is not null order by nome asc, cod_cliente asc";
+//criando a consulta SQL
+$consultaCliSql = "SELECT * FROM cliente ORDER BY nome ASC, cod_cliente ASC";
 
-// buscando e listando os dados da tabela (completa)
-    $lista = $conn->query($consultaSql);
-    $listaArq = $conn->query($consultaSqlArq);
+//buscando e listando os dados da tabela (conpleta)
+$lista = $conn->query($consultaCliSql);
 
-// separar em linhas
-    $row = $lista->fetch();
-    $rowArq = $listaArq->fetch();
+//separar em linhas
+$row = $lista->fetch();
+print_r($row);
+    
+//retornando o númaru de linhas
+$num_rows = $lista->rowCount();
 
-// retornando o númaru de linhas
-    $num_rows = $lista->rowCount();
-    $num_rows_arq = $listaArq->rowCount();
-
-// buscar cliente por id
-    $nome = "";
-    $cpf = "";
-    $cod = 0;
-if(isset($_GET['codedit']))
-{
-    $cliente = $conn->query(
-        "select * from cliente where cod_cliente = ".$_GET['codedit'])->fetch();
-    $nome = $cliente['nome'];
-    $cpf = $cliente['cpf'];
-    $cod = $_GET['codedit'];
-} 
-
-// arquivando registro de clientes
-if(isset($_GET['codarq']))
-{
-    $cliente = $conn->query(
-        'update cliente set deleted = now() where cod_cliente ='.$_GET['codarq'])->fetch();
-    header('location: cliente.php');
-}
-
-// restaurando registro de clientes
-if(isset($_GET['codrest']))
-{
-    $cliente = $conn->query(
-        'update cliente set deleted = null where cod_cliente ='.$_GET['codrest'])->fetch();
-    header('location: cliente.php');
-}
-
-// excluindo definitivamente registro de clientes
-if(isset($_GET['coddel']))
-{
-    $cliente = $conn->query(
-        'delete from cliente where cod_cliente ='.$_GET['coddel'])->fetch();
-    header('location: cliente.php');
-}
-
-// atualiza o registro de cliente
-if(isset($_POST['alterar']))
-{
-    $cod = $_POST['cod'];
-    $nome = $_POST['nome'];
-    $cpf = $_POST['cpf'];
-    $resultado = $conn->query("update cliente set nome = '$nome', cpf = '$cpf' where cod_cliente = $cod");
-    header('location: cliente.php');
-}
-
-// insere cliente na tabela
-if(isset($_POST['inserir']))
+if(isset($_POST['bt-enviar']))
 {
     $nome = $_POST['nome'];
     $cpf = $_POST['cpf'];
-    $insertSql = "insert cliente (nome, cpf) values('$nome','$cpf');";
+    $insertSql = "insert cliente (nome, cpf) values('$nome','$cpf')";
     $resultado = $conn->query($insertSql);
     header('location: cliente.php');
 }
-?>
 
-<!-- ----------------------------------------fim do php inicio do html---------------------------------------- -->
+?>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -82,48 +30,21 @@ if(isset($_POST['inserir']))
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clientes (<?php echo $num_rows?>)</title>
-    <link rel="stylesheet" href="css/style.css">
-    <style>
-        td{
-            border-bottom: 1px solid red;
-        }
-    </style>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/estyle.css">
 </head>
+<body class="bg-dark">
 
-<body >
+    <div class="container bg-Secondary border">
+        <header class="text-Light">
+            <h1>Cadastro de Clientes</h1>
+        </header>
 
-<!-- input de dados -->
-    <form action="cliente.php" method="post">
-        <div hidden>
-            <label for="cod">Código
-                <input type="text" name="cod" id="" value="<?php echo $cod;?>" required></label>
-        </div>
-        <div class="campo">
-            <label for="nome">Nome
-                <input type="text" name="nome" id="" value="<?php echo $nome;?>"required></label>
-        </div>
-        <div class="campo">
-            <label for="cpf">CPF
-                <input type="number" name="cpf" id=""  value="<?php echo $cpf;?>"required></label>
-        </div>
-        <div class="campo">
-             <button type="submit" 
-             name="<?php echo $cod==0?'inserir':'alterar' ?>">
-             <?php echo $cod==0?'Inserir':'Alterar' ?>
-            </button>
-        </div>
-       
-    </form>
-
-<!-- output de dados -->
-        <h4>clientes cadastrados</h4>
-
-        <table class="tabelinha">
+    <table class="table table-dark table-striped text-center">
         <thead>
             <th>Cod</th>
             <th>Nome</th>
             <th>CPF</th>
-            <th colspan="2">Ações</th>
         </thead>
         <tbody>
             <?php do {?>
@@ -131,34 +52,28 @@ if(isset($_POST['inserir']))
                     <td><?php echo $row['cod_cliente'];?></td>
                     <td><?php echo $row['nome'];?></td>
                     <td><?php echo $row['cpf'];?></td>
-                    <td><a href="cliente.php?codedit=<?php echo $row['cod_cliente'];?>">Editar</a></td>
-                    <td><a href="cliente.php?codarq=<?php echo $row['cod_cliente'];?>">Arquivar</a></td>
                 </tr>
             <?php } while ($row = $lista->fetch())?>
         </tbody>
     </table>
-
-    <h4>clientes arquivados</h4>
-
-    <table class="tabelinha">
-        <thead>
-            <th>Cod</th>
-            <th>Nome</th>
-            <th>CPF</th>
-            <th colspan="2">Ações</th>
-        </thead>
-        <tbody>
-            <?php do {?>
-                <tr>
-                    <td><?php echo $rowArq['cod_cliente'];?></td>
-                    <td><?php echo $rowArq['nome'];?></td>
-                    <td><?php echo $rowArq['cpf'];?></td>
-                    <td><a href="cliente.php?codrest=<?php echo $rowArq['cod_cliente'];?>">Restaurar</a></td>
-                    <td><a href="cliente.php?coddel=<?php echo $rowArq['cod_cliente'];?>">Deletar</a></td>
-                </tr>
-            <?php } while ($rowArq = $listaArq->fetch())?>
-        </tbody>
-    </table>
-
+        <form action="#" method="post" class="text-Light">
+            <div hidden>
+                <label for="cod">Código
+                    <input class="campo form-control" type="text" name="cod" id=""></label>
+            </div>
+            <div class="campo">
+                <label for="nome">Nome
+                    <input class="campo form-control" type="text" name="nome" id=""></label>
+            </div>
+            <div class="campo">
+                <label for="cpf">CPF
+                    <input class="campo form-control" type="number" name="cpf" id=""></label>
+            </div>
+            <div class="campo">
+                <button class="btn btn-primary" type="reset" name="bt-enviar">Enviar</button>
+            </div>
+        </form>
+        </div>
 </body>
+    <script src="js/bootstrap.min.js"></script>
 </html>
